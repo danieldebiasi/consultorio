@@ -21,7 +21,7 @@
       </v-btn>
     </v-toolbar>
 
-    <v-navigation-drawer app dark v-model="drawer" class="primary elevation-1" temporary>
+    <v-navigation-drawer app dark v-model="drawer" class="primary elevation-1">
       <!-- user card -->
       <v-list>
         <v-list-tile v-for="tile in this.tiles" :key="tile.text" router :to="tile.route" active-class='primary lighten-1'>
@@ -55,18 +55,9 @@ export default {
       ]
     }
   },
-  created() {
-    this.$eventHub.$on('logged', this.logged);
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('logged');
-  },
   methods: {
     goToHomepage() {
       this.$router.push('/');
-    },
-    logged(newUser) {
-
     }
   }
   

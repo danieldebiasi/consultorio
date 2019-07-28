@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-btn class="mb-3" color="success">
+      <v-btn round class="mb-3" color="success">
         <v-icon left>add_circle</v-icon>
         <span>Novo paciente</span>
       </v-btn>

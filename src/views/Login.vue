@@ -9,7 +9,13 @@
 export default {
   data() {
     return {
-
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    login() {
+      const { username, password } = this;
     }
   }
 }
