@@ -5,7 +5,22 @@
         <v-icon left>add_circle</v-icon>
         <span>Novo paciente</span>
       </v-btn>
-      <v-data-table :headers="headers" :items="items" class="elevation-1">
+      <v-text-field
+        label="Buscar paciente"
+        prepend-icon="search"
+        v-model="search"
+        clearable        
+      ></v-text-field>
+      <v-data-table 
+        :headers="headers" 
+        :items="items" 
+        class="elevation-1"
+        rows-per-page-text="Pacientes por página"
+        :rows-per-page-items="[5,10,25,50,90]"
+        :search="search"
+        :no-results-text="`Nenhum paciente encontrado na busca '${search}'`"
+        no-data-text="Nenhum paciente cadastrado"
+      >
         <template v-slot:items="props">
           <td>{{ props.item.name }}</td>
           <td class="justify-end layout px-0">
@@ -35,7 +50,8 @@ export default {
           sortable: false
         }
       ],
-      items: [{ name: "Paciente 1" }, { name: "Paciente 2" }]
+      items: [{ name: "Paciente 1" }, { name: "Paciente 2" }],
+      search: ''
     };
   },
   methods: {

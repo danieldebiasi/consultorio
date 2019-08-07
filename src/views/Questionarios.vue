@@ -5,7 +5,22 @@
         <v-icon left>add_circle</v-icon>
         <span>Novo questionário</span>
       </v-btn>
-      <v-data-table :headers="headers" :items="items" class="elevation-1">
+      <v-text-field
+        label="Buscar questionário"
+        prepend-icon="search"
+        v-model="search"
+        clearable        
+      ></v-text-field>
+      <v-data-table 
+        :headers="headers" 
+        :items="items" 
+        class="elevation-1"
+        rows-per-page-text="Questionários por página"
+        :rows-per-page-items="[5,10,25,50]"
+        :search="search"
+        :no-results-text="`Nenhum questionário encontrado com a busca '${search}'`"
+        no-data-text="Nenhum questionário cadastrado"
+      >
         <template v-slot:items="props">
           <td>{{ props.item.title }}</td>
           <td class="justify-end layout px-0">
@@ -35,7 +50,8 @@ export default {
           sortable: false
         }
       ],
-      items: []
+      items: [],
+      search: ''
     };
   },
   methods: {

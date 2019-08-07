@@ -146,17 +146,6 @@ export default {
     formatInterval(time) {
       return `${time.time}`;
     },
-    getToday() {
-      let today = new Date();
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1;
-      let yyyy = today.getFullYear();
-
-      dd = dd < 10 ? "0" + dd : dd;
-      mm = mm < 10 ? "0" + mm : mm;
-
-      return `${yyyy}-${mm}-${dd}`;
-    },
     setToday() {
       this.date = new Date().toISOString().substr(0, 10);
     }
