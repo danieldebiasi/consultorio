@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-btn round class="mb-3" color="success">
-        <v-icon left>add_circle</v-icon>
-        <span>Novo questionário</span>
-      </v-btn>
+      <FormQuestionario class="mb-3"/>
       <v-text-field
         label="Buscar questionário"
         prepend-icon="search"
@@ -23,9 +20,43 @@
       >
         <template v-slot:items="props">
           <td>{{ props.item.title }}</td>
+          <td>{{ props.item.category }}</td>
           <td class="justify-end layout px-0">
-            <v-icon small class="mr-2" color="success" @click="editForm()">edit</v-icon>
-            <v-icon small class="mr-3" color="error" @click="deleteForm()">delete</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small  
+                  class="mr-2" 
+                  v-on="on"
+                  @click="viewForm()"
+                >visibility</v-icon>
+              </template>
+              <span>Visualizar questionário</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="success" 
+                  v-on="on"
+                  @click="editForm()"
+                >edit</v-icon>
+              </template>
+              <span>Editar questionário</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="error" 
+                  v-on="on"
+                  @click="deleteForm()"
+                >delete</v-icon>
+              </template>
+              <span>Excluir questionário</span>
+            </v-tooltip>
           </td>
         </template>
       </v-data-table>
@@ -34,7 +65,10 @@
 </template>
 
 <script>
+import FormQuestionario from '@/components/FormQuestionario';
+
 export default {
+  components: { FormQuestionario },
   data() {
     return {
       headers: [
@@ -42,6 +76,11 @@ export default {
           text: "Título",
           align: "left",
           value: "title"
+        },
+        {
+          text: "Categoria",
+          align: "left",
+          value: "category"
         },
         {
           text: "Ações",
@@ -57,11 +96,12 @@ export default {
   methods: {
     initialize() {
       this.items = [
-        { title: "Questionário 1" },
-        { title: "Questionário 2" },
-        { title: "Questionário 3" }
+        { title: "Questionário 1", category: "Cirurgia" },
+        { title: "Questionário 2", category: "Implante" },
+        { title: "Questionário 3", category: "Restauração" }
       ];
     },
+    viewForm() {},
     editForm() {},
     deleteForm() {}
   },

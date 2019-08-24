@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-btn round class="mb-3" color="success">
-        <v-icon left>add_circle</v-icon>
-        <span>Novo usuário</span>
-      </v-btn>
+      <FormUsuario />
       <v-text-field
         label="Buscar usuário"
         prepend-icon="search"
@@ -26,8 +23,41 @@
           <td>{{ props.item.access }}</td>
           <td>{{ props.item.username }}</td>
           <td class="justify-end layout px-0">
-            <v-icon small class="mr-2" color="success" @click="editUser()">edit</v-icon>
-            <v-icon small class="mr-3" color="error" @click="deleteUser()">delete</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small  
+                  class="mr-2" 
+                  v-on="on"
+                  @click="viewUser()"
+                >visibility</v-icon>
+              </template>
+              <span>Visualizar usuário</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="success" 
+                  v-on="on"
+                  @click="editUser()"
+                >edit</v-icon>
+              </template>
+              <span>Editar usuário</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="error" 
+                  v-on="on"
+                  @click="deleteUser()"
+                >delete</v-icon>
+              </template>
+              <span>Excluir usuário</span>
+            </v-tooltip>
           </td>
         </template>
       </v-data-table>
@@ -36,7 +66,10 @@
 </template>
 
 <script>
+import FormUsuario from '@/components/FormUsuario';
+
 export default {
+  components: { FormUsuario },
   data() {
     return {
       headers: [
@@ -74,6 +107,7 @@ export default {
         { name: "Paulo Victor", access: "Auxiliar", username: "auxiliar01"}
       ];
     },
+    viewUser() {},
     editUser() {},
     deleteUser() {}
   },

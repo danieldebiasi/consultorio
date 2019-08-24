@@ -98,8 +98,7 @@ export default {
       typeOptions: [
         { text: "Dia", value: "day" },
         { text: "4 dias", value: "4day" },
-        { text: "Semana", value: "week" },
-        //{ text: "Mês", value: "month" }
+        { text: "Semana", value: "week" }
       ],
       weekdays: {
         0: "dom",

@@ -8,14 +8,15 @@
         </v-btn>
       </template>
       <v-card>
-        <v-card-title>
-          <span class="headline font-weight-light">Agendar consulta</span>
+        <v-card-title class="headline primary">
+          <v-icon dark left>event_available</v-icon>
+          <span class="white--text">Agendar consulta</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout row wrap>
               <v-flex xs12>
-                <v-text-field label="Paciente" clearable required></v-text-field>
+                <v-text-field label="Paciente" prepend-icon="person" clearable required></v-text-field>
               </v-flex>
             </v-layout>
             <v-layout row wrap>
@@ -112,7 +113,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn flat @click="dialog = false">Cancelar</v-btn>
-          <v-btn flat color="success" @click="dialog = false">Agendar</v-btn>
+          <v-btn color="success" @click="dialog = false">Agendar</v-btn>
         </v-card-actions>
       </v-card>
       <v-snackbar

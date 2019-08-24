@@ -34,7 +34,7 @@
           <v-flex xs12>
             <v-layout row wrap>
               <v-flex xs12 class="text-xs-center">
-                <v-icon>person</v-icon>
+                <v-icon>perm_identity</v-icon>
               </v-flex>
             </v-layout>
             <v-layout row wrap>
@@ -91,7 +91,7 @@ export default {
       drawer: false,
       tiles: [
         { icon: "lock", text: "Login", route: "/login" },
-        { icon: "calendar_today", text: "Agenda", route: "/" },
+        { icon: "today", text: "Agenda", route: "/" },
         { icon: "schedule", text: "Consulta", route: "/consulta" },
         { icon: "person", text: "Pacientes", route: "/pacientes" },
         { icon: "assignment", text: "Questionários", route: "/questionarios" },
@@ -114,8 +114,6 @@ export default {
       .reverse()
       .join("/");
     this.now = today;
-    console.log("Today: " + today);
-    console.log("Now: " + this.now);
   }
 };
 </script>

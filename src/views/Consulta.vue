@@ -17,7 +17,7 @@
           <v-card>
             <v-card-title class="primary">
               <v-icon dark left>assignment</v-icon>
-              <h2 class="headline white--text font-weight-medium">Dados do paciente</h2>
+              <h2 class="headline white--text">Dados do paciente</h2>
             </v-card-title>
 
             <v-layout row wrap align-center pa-3>

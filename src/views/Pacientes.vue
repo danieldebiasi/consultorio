@@ -1,10 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-btn round class="mb-3" color="success">
-        <v-icon left>add_circle</v-icon>
-        <span>Novo paciente</span>
-      </v-btn>
+      <FormPaciente class="mb-3" />
       <v-text-field
         label="Buscar paciente"
         prepend-icon="search"
@@ -23,9 +20,43 @@
       >
         <template v-slot:items="props">
           <td>{{ props.item.name }}</td>
+          <td>{{ props.item.insurance }}</td>
           <td class="justify-end layout px-0">
-            <v-icon small class="mr-2" color="success" @click="editPacient()">edit</v-icon>
-            <v-icon small class="mr-3" color="error" @click="deletePacient()">delete</v-icon>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small  
+                  class="mr-2" 
+                  v-on="on"
+                  @click="viewPacient()"
+                >visibility</v-icon>
+              </template>
+              <span>Visualizar paciente</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="success" 
+                  v-on="on"
+                  @click="editPacient()"
+                >edit</v-icon>
+              </template>
+              <span>Editar paciente</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">              
+                <v-icon 
+                  small 
+                  class="mr-2" 
+                  color="error" 
+                  v-on="on"
+                  @click="deletePacient()"
+                >delete</v-icon>
+              </template>
+              <span>Excluir paciente</span>
+            </v-tooltip>
           </td>
         </template>
       </v-data-table>
@@ -34,7 +65,10 @@
 </template>
 
 <script>
+import FormPaciente from '@/components/FormPaciente';
+
 export default {
+  components: { FormPaciente },
   data() {
     return {
       headers: [
@@ -44,26 +78,35 @@ export default {
           value: "name"
         },
         {
+          text: "Convênio",
+          align: "left",
+          value: "insurance"
+        },
+        {
           text: "Ações",
           value: "name",
           align: "right",
           sortable: false
         }
       ],
-      items: [{ name: "Paciente 1" }, { name: "Paciente 2" }],
+      items: [
+        { name: "Paciente 1", insurance: "SulAmérica Saúde"},
+        { name: "Paciente 2", insurance: "Amil"},
+        { name: "Paciente 3", insurance: "Bradesco Saúde" }],
       search: ''
     };
   },
   methods: {
     initialize() {
       this.items = [
-        { name: "Paciente 1" },
-        { name: "Paciente 2" },
-        { name: "Paciente 3" }
+        { name: "Paciente 1", insurance: "SulAmérica Saúde"},
+        { name: "Paciente 2", insurance: "Amil"},
+        { name: "Paciente 3", insurance: "Bradesco Saúde" }
       ];
     },
     editPacient() {},
-    deletePacient() {}
+    deletePacient() {},
+    viewPacient() {}
   },
   created() {
     this.initialize();
