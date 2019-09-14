@@ -112,6 +112,14 @@ export default {
     deleteUser() {}
   },
   created() {
+    if(!this.$state.session.isActive) {
+      this.$router.push('/login');
+    }
+    if(!this.$state.session.user.roles.configuracoes){
+      this.$state.$emit('logout');
+      this.$router.push('/login');
+    }
+
     this.initialize();
   }
 };

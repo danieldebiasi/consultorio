@@ -106,6 +106,14 @@ export default {
     deleteForm() {}
   },
   created() {
+    if(!this.$state.session.isActive) {
+      this.$router.push('/login');
+    }
+    if(!this.$state.session.user.roles.questionarios){
+      this.$state.$emit('logout');
+      this.$router.push('/login');
+    }
+
     this.initialize();
   }
 };

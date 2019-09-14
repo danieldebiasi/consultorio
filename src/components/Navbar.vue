@@ -14,7 +14,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn flat color="grey">
+      <v-btn flat color="grey" @click="logout">
         <span>Sair</span>
         <v-icon right>exit_to_app</v-icon>
       </v-btn>
@@ -39,7 +39,7 @@
             </v-layout>
             <v-layout row wrap>
               <v-flex xs12 class="text-xs-center">
-                <span class="subheading font-weight-medium">{{this.username}}</span>
+                <span class="subheading font-weight-medium">{{this.$state.session.user.username}}</span>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -52,7 +52,7 @@
               </v-flex>
               <v-flex xs12>
                 <span class="font-weight-black">Nível: </span>
-                <span>{{this.userLevel}}</span>
+                <span>{{this.$state.session.user.type}}</span>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -105,6 +105,10 @@ export default {
   methods: {
     goToHomepage() {
       this.$router.push("/");
+    },
+    logout() {
+      this.$state.$emit('logout');
+      this.$router.push('/login');
     }
   },
   created() {

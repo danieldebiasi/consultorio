@@ -145,6 +145,15 @@ export default {
       desfazerDialog: false
     };
   },
-  methods: {}
+  methods: {},
+  created() {
+    if(!this.$state.session.isActive) {
+      this.$router.push('/login');
+    }
+    if(!this.$state.session.user.roles.consulta){
+      this.$state.$emit('logout');
+      this.$router.push('/login');
+    }
+  }
 };
 </script>

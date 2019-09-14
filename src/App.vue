@@ -1,7 +1,7 @@
 <template>
   <v-app>
     
-    <Navbar />
+    <Navbar v-if="this.$state.session.isActive" />
 
     <v-content>
 
