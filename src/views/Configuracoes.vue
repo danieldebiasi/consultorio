@@ -13,21 +13,21 @@
         :items="items" 
         class="elevation-1"
         rows-per-page-text="Usuários por página"
-        :rows-per-page-items="[5,10,25,50]"
+        :rows-per-page-items="[10,25,50]"
         :search="search"
         :no-results-text="`Nenhum usuário encontrado com a busca '${search}'`"
         no-data-text="Nenhum usuário cadastrado"
       >
         <template v-slot:items="props">
-          <td>{{ props.item.name }}</td>
-          <td>{{ props.item.access }}</td>
+          <td>{{ props.item.nome }}</td>
+          <td>{{ props.item.tipo }}</td>
           <td>{{ props.item.username }}</td>
           <td class="justify-end layout px-0">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">              
                 <v-icon 
                   small  
-                  class="mr-2" 
+                  class="mr-3" 
                   v-on="on"
                   @click="viewUser()"
                 >visibility</v-icon>
@@ -38,19 +38,7 @@
               <template v-slot:activator="{ on }">              
                 <v-icon 
                   small 
-                  class="mr-2" 
-                  color="success" 
-                  v-on="on"
-                  @click="editUser()"
-                >edit</v-icon>
-              </template>
-              <span>Editar usuário</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">              
-                <v-icon 
-                  small 
-                  class="mr-2" 
+                  class="mr-3" 
                   color="error" 
                   v-on="on"
                   @click="deleteUser()"
@@ -67,6 +55,8 @@
 
 <script>
 import FormUsuario from '@/components/FormUsuario';
+import axios from 'axios';
+import paths from '@/paths';
 
 export default {
   components: { FormUsuario },
@@ -76,12 +66,12 @@ export default {
         {
           text: "Nome",
           align: "left",
-          value: "name"
+          value: "nome"
         },
         {
           text: "Acesso",
           align: "left",
-          value: "access"
+          value: "tipo"
         },
         {
           text: "Usuário",
@@ -100,12 +90,17 @@ export default {
     };
   },
   methods: {
-    initialize() {
-      this.items = [
-        { name: "Carlos Alberto", access: "Administrador", username: "admin"},
-        { name: "Raquel Soares", access: "Dentista", username: "dentista01"},
-        { name: "Paulo Victor", access: "Auxiliar", username: "auxiliar01"}
-      ];
+    getAllUsers() {
+      axios.get(paths.usuarios.getAll)
+      .then((response) => {
+        this.items = [];
+        response.data.forEach(element => {
+          this.items.push(element);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     },
     viewUser() {},
     editUser() {},
@@ -114,13 +109,24 @@ export default {
   created() {
     if(!this.$state.session.isActive) {
       this.$router.push('/login');
-    }
-    if(!this.$state.session.user.roles.configuracoes){
-      this.$state.$emit('logout');
-      this.$router.push('/login');
+    } else {
+        if(!this.$state.session.user.roles.configuracoes){
+        this.$state.$emit('logout');
+        this.$router.push('/login');
+      }
     }
 
-    this.initialize();
+  
+  },
+  mounted() {
+    this.$eventHub.$on("updateUsuarios", () => {
+      this.getAllUsers();
+    });
+
+    this.getAllUsers();
+  },
+  beforeDestroy() {
+    this.$eventHub.$off();
   }
 };
 </script>

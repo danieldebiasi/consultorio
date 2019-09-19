@@ -19,5 +19,14 @@ export default {
     getById: `${baseUrl}/consultorio/questionarios/getById.php`,
     update: `${baseUrl}/consultorio/questionarios/update.php`
   },
-  
+  consultas: {
+    create: `${baseUrl}/consultorio/consultas/create.php`,
+    getAll: `${baseUrl}/consultorio/consultas/getAll.php`,
+    delete: `${baseUrl}/consultorio/consultas/delete.php`,
+    update: `${baseUrl}/consultorio/consultas/update.php`
+  },
+  usuarios: {
+    create: `${baseUrl}/consultorio/users/create.php`,
+    getAll: `${baseUrl}/consultorio/users/getAll.php`,
+  }
 }

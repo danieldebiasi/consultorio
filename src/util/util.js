@@ -18,6 +18,13 @@ function subtractHours(hour1, hour2) {
   return `${hh}:${mm}`;
 }
 
+function inMinutes(hour) {
+  let hh = hour.split(":")[0];
+  let mm = hour.split(":")[1];
+
+  return hh*60 + mm*1;
+}
+
 function getNow() {
   let today = new Date();
 
@@ -42,4 +49,4 @@ function getNow() {
   return returnedNow;
 }
 
-export { subtractHours, getNow };
+export { subtractHours, getNow, inMinutes };

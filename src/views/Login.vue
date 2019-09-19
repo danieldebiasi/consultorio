@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid fill-height>
-      <v-layout align-center justify-center>
+      <v-layout align-center justify-center mt-5>
         <v-flex xs4>
           <v-card class="elevation-20">
             <v-toolbar color="primary" class="text-uppercase" flat>
@@ -19,13 +19,17 @@
                   label="Nome de usuário"
                   prepend-icon="person"
                   type="text"
+                  @keypress.enter="login"
                 ></v-text-field>
                 <v-text-field
                   v-model="password"
                   name="password"
                   label="Senha"
                   prepend-icon="lock"
-                  type="password"
+                  :append-icon="showPassword ? 'visibility' : 'visibility_off'"
+                  @click:append="showPassword = !showPassword"
+                  :type="showPassword ? 'text' : 'password'"
+                  @keypress.enter="login"
                 ></v-text-field>
               </v-form>
             </v-card-text>
@@ -40,6 +44,14 @@
           </v-card>
         </v-flex>
       </v-layout>
+
+      <v-snackbar v-model="snackbar" :timeout="4500" color="error" top>
+        <v-icon dark left>error</v-icon>
+        {{ message }}
+        <v-btn flat @click.native="snackbar = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-snackbar>
     </v-container>
   </div>
 </template>
@@ -48,22 +60,29 @@
 import axios from "axios";
 import paths from "@/paths";
 import { reject } from "q";
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      showPassword: false,
+      snackbar: false,
+      message: ""
     };
   },
   methods: {
+    notify(message) {
+      this.message = message;
+      this.snackbar = true;
+    },
     login() {
       const username = this.username;
       const password = CryptoJS.MD5(this.password).toString();
 
       Promise.all([
-        new Promise((resolve, rejected) => {
+        new Promise((resolve, reject) => {
           //Check user credentials
           axios
             .post(
@@ -71,19 +90,25 @@ export default {
               JSON.stringify({ username: username, password: password })
             )
             .then(response => {
-              console.log("CRED DATA: ", response.data);
-              if(response.data.status == 200) {
+              if (response.data.status == 200) {
                 resolve(response.data.authenticatedUser);
               } else {
-                const errorStatus = (response.data.status == 401) ? "Unauthorized" : "Internal server error";
-                throw new Error(errorStatus);
+                switch (response.data.status) {
+                  case 401:
+                    reject("Usuário ou senha incorretos!");
+                    break;
+                
+                  default:
+                    reject("Falha ao comunicar com servidor!");
+                    break;
+                }
               }
             })
             .catch(error => {
-              console.error(error);
+              console.info(error);
             });
         }),
-        new Promise((resolve, rejected) => {
+        new Promise((resolve, reject) => {
           //Get user roles
           axios
             .post(
@@ -91,7 +116,6 @@ export default {
               JSON.stringify({ username: username })
             )
             .then(response => {
-              console.log("ROLES DATA: ", response.data);
               resolve(response.data);
             })
             .catch(error => {
@@ -106,7 +130,7 @@ export default {
           this.$router.push("/");
         })
         .catch(error => {
-          console.error(error);
+          this.notify(error);
         });
     }
   }

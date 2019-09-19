@@ -21,13 +21,34 @@ Vue.prototype.$state = new Vue({
       this.session.isActive = true;
       this.session.user = user;
       this.session.user.roles = roles;
-      console.log("STATE MGR: ", this.session);
+      this.session.consulta = {
+        isActive: false
+      }
+      console.log("User Authenticated: ", this.session);
+    });
+
+    this.$on('startConsulta', (data) => {
+      console.log("Start Consulta: ", this.session);
+      this.session.consulta = {
+        isActive: true,
+        event: data.event,
+        person: data.person,
+        odontograma: {
+          anotacao: ''
+        }
+      }
+    });
+
+    this.$on('clearConsulta', () => {
+      console.log("Clear Consulta: ", this.session);
+      this.session.consulta = {
+        isActive: false
+      }
     });
 
     this.$on('logout', () => {
-      this.session.isActive = false;
-      this.session.user = {};
-      console.log(this.session);
+      console.log("Logout: ", this.session);
+      this.session = {isActive: false};
     });
   }
 });

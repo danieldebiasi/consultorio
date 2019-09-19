@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-layout row wrap v-if="!consulta">
+      <v-layout row wrap v-if="!this.$state.session.consulta.isActive">
         <v-flex xs12>
           <v-alert
             :value="true"
@@ -12,7 +12,7 @@
         </v-flex>
       </v-layout>
 
-      <v-layout row wrap align-center v-if="consulta">
+      <v-layout row wrap align-center v-if="this.$state.session.consulta.isActive">
         <v-flex xs12>
           <v-card>
             <v-card-title class="primary">
@@ -25,13 +25,13 @@
                 <v-text-field 
                   label="Paciente" 
                   prepend-icon="person" 
-                  value="João da Silva" 
+                  :value="this.$state.session.consulta.person.nome" 
                   readonly
                 ></v-text-field>
                 <v-text-field
                   label="Convênio"
                   prepend-icon="local_hospital"
-                  value="SulAmérica Saúde"
+                  :value="this.$state.session.consulta.person.convenio"
                   readonly
                 ></v-text-field>
               </v-flex>
@@ -39,13 +39,13 @@
                 <v-text-field
                   label="Data de nascimento"
                   prepend-icon="event"
-                  value="03/10/1970"
+                  :value="formatDate(this.$state.session.consulta.person.datanascimento)"
                   readonly
                 ></v-text-field>
                 <v-text-field
                   label="Telefone"
                   prepend-icon="phone"
-                  value="(11) 99922-1002"
+                  :value="this.$state.session.consulta.person.telefone"
                   readonly
                 ></v-text-field>
               </v-flex>
@@ -53,13 +53,13 @@
                 <v-text-field
                   label="Email"
                   prepend-icon="email"
-                  value="joaosilva70@gmail.com"
+                  :value="this.$state.session.consulta.person.email"
                   readonly
                 ></v-text-field>
                 <v-text-field
                   label="Endereço"
                   prepend-icon="home"
-                  value="Rua Nossa Senhora de Fátima, 912 - apto 43"
+                  :value="this.$state.session.consulta.person.endereco"
                   readonly
                 ></v-text-field>
               </v-flex>
@@ -91,14 +91,14 @@
             </template>
             <v-card>
               <v-card-title class="headline primary">
-                <v-icon left dark color="warning">warning</v-icon>
+                <v-icon left dark>warning</v-icon>
                 <span class="white--text">Desfazer consulta?</span>
               </v-card-title>
               <v-card-text>Ao desfazer a consulta, as marcações e anotações serão perdidas. A consulta poderá ser aberta novamente ou cancelada através da agenda.</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn flat @click="desfazerDialog = false">Cancelar</v-btn>
-                <v-btn color="error">Desfazer Consulta</v-btn>
+                <v-btn color="error" @click="undo">Desfazer Consulta</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -123,7 +123,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn flat @click="encerrarDialog = false">Cancelar</v-btn>
-                <v-btn color="success">Encerrar Consulta</v-btn>
+                <v-btn color="success" @click="finish">Encerrar Consulta</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -145,14 +145,30 @@ export default {
       desfazerDialog: false
     };
   },
-  methods: {},
+  methods: {
+    formatDate(date) {
+      let split = date.split("-");
+      return `${split[2]}/${split[1]}/${split[0]}`;
+    },
+    finish() {
+      this.desfazerDialog = false;
+      this.$state.$emit('clearConsulta');
+      this.$router.push('/');
+    },
+    undo() {
+      this.desfazerDialog = false;
+      this.$state.$emit('clearConsulta');
+      this.$router.push('/');
+    }
+  },
   created() {
     if(!this.$state.session.isActive) {
       this.$router.push('/login');
-    }
-    if(!this.$state.session.user.roles.consulta){
-      this.$state.$emit('logout');
-      this.$router.push('/login');
+    } else {
+        if(!this.$state.session.user.roles.consulta){
+        this.$state.$emit('logout');
+        this.$router.push('/login');
+      }
     }
   }
 };

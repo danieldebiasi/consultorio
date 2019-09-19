@@ -106,11 +106,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat @click="dialog = false">Cancelar</v-btn>
+          <v-btn flat @click="dismiss">Cancelar</v-btn>
           <v-btn color="success" @click="createPaciente">Cadastrar</v-btn>
         </v-card-actions>
       </v-card>
-      <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
+      <v-snackbar v-model="snackbar" :timeout="4500" color="warning" top>
+        <v-icon dark left>warning</v-icon>
         {{ message }}
         <v-btn flat @click.native="snackbar = false">
           <v-icon>close</v-icon>
@@ -121,28 +122,28 @@
 </template>
 
 <script>
-import axios from 'axios';
-import paths from '@/paths';
+import axios from "axios";
+import paths from "@/paths";
 
 export default {
-  props: ['formContext'],
+  props: ["formContext"],
   data() {
     return {
       context: this.formContext,
       paciente: {
-        nome: "",
-        convenio: "",
-        cpf: "",
-        rg: "",
+        nome: null,
+        convenio: null,
+        cpf: null,
+        rg: null,
         dataNascimento: new Date().toISOString().substr(0, 10),
-        responsavel: '',
-        email: '',
-        telefone: '',
-        endereco: '',
-        cidade: '',
-        uf: '',
-        profissao: '',
-        estadoCivil: ''
+        responsavel: "",
+        email: null,
+        telefone: null,
+        endereco: null,
+        cidade: null,
+        uf: null,
+        profissao: "",
+        estadoCivil: ""
       },
       dialog: false,
       message: "",
@@ -181,16 +182,55 @@ export default {
     };
   },
   methods: {
-    createPaciente() {
-      let data = this.paciente;
-      axios.post(paths.pacientes.create, JSON.stringify(data))
-      .then((response) => {
-        console.log(response.data.message);
-        this.$eventHub.$emit('updatePacientes');
-      }).catch((error) => {
-        console.log(error);
-      });
+    dismiss() {
+      this.paciente.nome = null;
+      this.paciente.convenio = null;
+      this.paciente.cpf = null;
+      this.paciente.rg = null;
+      this.paciente.dataNascimento = new Date().toISOString().substr(0, 10);
+      this.paciente.responsavel = "";
+      this.paciente.email = null;
+      this.paciente.telefone = null;
+      this.paciente.endereco = null;
+      this.paciente.cidade = null;
+      this.paciente.uf = null;
+      this.paciente.profissao = "";
+      this.paciente.estadoCivil = "";
       this.dialog = false;
+    },
+    createPaciente() {
+      Promise.all([
+        new Promise((resolve, reject) => {
+          let data = this.paciente;
+          if (this.verifyFields(data)) {
+            axios
+              .post(paths.pacientes.create, JSON.stringify(data))
+              .then(response => {
+                resolve();
+              })
+              .catch(error => {
+                reject("Falha ao cadastrar paciente!");
+              });
+          } else {
+            reject("Preencha todos os campos obrigatórios!");
+          }
+        })
+      ])
+      .then((response) => {
+        this.$eventHub.$emit('updatePacientes');
+        this.dismiss();
+      })
+      .catch((error) => {
+        this.notify(error);
+      });
+    },
+    verifyFields(data) {
+      return (data.nome && data.convenio && data.cpf && data.rg && data.dataNascimento
+              && data.email && data.telefone && data.endereco && data.cidade && data.uf);
+    },
+    notify(message) {
+      this.message = message;
+      this.snackbar = true;
     }
   },
   computed: {

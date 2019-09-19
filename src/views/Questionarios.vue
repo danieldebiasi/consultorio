@@ -26,7 +26,7 @@
               <template v-slot:activator="{ on }">              
                 <v-icon 
                   small  
-                  class="mr-2" 
+                  class="mr-3" 
                   v-on="on"
                   @click="viewForm()"
                 >visibility</v-icon>
@@ -37,19 +37,7 @@
               <template v-slot:activator="{ on }">              
                 <v-icon 
                   small 
-                  class="mr-2" 
-                  color="success" 
-                  v-on="on"
-                  @click="editForm()"
-                >edit</v-icon>
-              </template>
-              <span>Editar questionário</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">              
-                <v-icon 
-                  small 
-                  class="mr-2" 
+                  class="mr-3" 
                   color="error" 
                   v-on="on"
                   @click="deleteForm()"
@@ -108,10 +96,11 @@ export default {
   created() {
     if(!this.$state.session.isActive) {
       this.$router.push('/login');
-    }
-    if(!this.$state.session.user.roles.questionarios){
-      this.$state.$emit('logout');
-      this.$router.push('/login');
+    } else {
+        if(!this.$state.session.user.roles.questionarios){
+        this.$state.$emit('logout');
+        this.$router.push('/login');
+      }
     }
 
     this.initialize();
