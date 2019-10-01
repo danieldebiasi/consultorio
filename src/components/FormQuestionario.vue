@@ -15,10 +15,10 @@
         <v-card-text>
           <v-layout row wrap>
             <v-flex xs6 pr-2>
-              <v-text-field label="Título"></v-text-field>
+              <v-text-field v-model="title" label="Título"></v-text-field>
             </v-flex>
             <v-flex xs6 pl-2>
-              <v-text-field label="Categoria"></v-text-field>
+              <v-text-field v-model="category" label="Categoria"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap my-3>
@@ -50,8 +50,8 @@
             <span>Adicionar pergunta</span>
           </v-tooltip>
           <v-spacer></v-spacer>
-          <v-btn flat @click="dialog = false">Cancelar</v-btn>
-          <v-btn color="success" @click="dialog = false">Concluído</v-btn>
+          <v-btn flat @click="dismiss">Cancelar</v-btn>
+          <v-btn color="success" @click="create">Concluído</v-btn>
         </v-card-actions>
       </v-card>
       <!-- <v-snackbar v-model="snackbar" :timeout="3500" color="error" top>
@@ -66,6 +66,8 @@
 
 <script>
 import Pergunta from '@/components/Pergunta';
+import axios from 'axios';
+import paths from '@/paths';
 
 export default {
   components: { Pergunta },
@@ -73,19 +75,51 @@ export default {
     return {
       dialog: false,
       message: "",
-      questions: [
-        {question: "Pergunta 1", deleted: false}, 
-        {question: "Pergunta 2", deleted: false}, 
-        {question: "Pergunta 3", deleted: false}
-      ]
+      title: "",
+      category: "",
+      questions: []
     };
   },
   methods: {
+    dismiss() {
+      this.dialog = false;
+      this.questions = [];
+    },
     addQuestion() {
       this.questions.push({question: '', deleted: false});
     },
     deleteQuestion(index) {      
       this.questions[index].deleted = true;
+    },
+    create() {
+      let questions = [];
+      this.questions.forEach(element => {
+        if(!element.deleted) {
+          questions.push(element);
+        }
+      });
+
+      console.log(JSON.stringify({title: this.title,
+            category: this.category,
+            questions: questions}));
+
+      Promise.all([
+        new Promise((resolve, reject) => {
+          axios.post(paths.questionarios.create, JSON.stringify({
+            title: this.title,
+            category: this.category,
+            questions: questions
+          }))
+          .then((response) => {
+            console.log("RESPONSE: ", response.data);
+          })
+          .catch((error) => {});
+        })
+      ])
+      .then()
+      .catch();
+
+      this.dismiss();
     }
   }
 };

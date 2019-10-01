@@ -54,7 +54,7 @@
             </v-layout>
             <v-layout row wrap>
               <v-flex xs12 class="text-xs-center">
-                <span class="subheading font-weight-medium">{{this.$state.session.user.username}}</span>
+                <span class="subheading font-weight-medium">{{formatName(this.$state.session.user.name)}}</span>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -146,6 +146,9 @@ export default {
     logout() {
       this.$state.$emit("logout");
       this.$router.push("/login");
+    },
+    formatName(name) {
+      return name.split(" ")[0];
     }
   },
   created() {

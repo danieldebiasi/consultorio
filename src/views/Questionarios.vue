@@ -54,6 +54,8 @@
 
 <script>
 import FormQuestionario from '@/components/FormQuestionario';
+import axios from 'axios';
+import paths from '@/paths';
 
 export default {
   components: { FormQuestionario },
@@ -72,7 +74,7 @@ export default {
         },
         {
           text: "Ações",
-          value: "name",
+          value: "actions",
           align: "right",
           sortable: false
         }
@@ -82,12 +84,18 @@ export default {
     };
   },
   methods: {
-    initialize() {
-      this.items = [
-        { title: "Questionário 1", category: "Cirurgia" },
-        { title: "Questionário 2", category: "Implante" },
-        { title: "Questionário 3", category: "Restauração" }
-      ];
+    getAllQuestionarios() {
+      axios
+        .get(paths.questionarios.getAll)
+        .then(response => {
+          this.items = [];
+          response.data.forEach(element => {
+            this.items.push(element);
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     viewForm() {},
     editForm() {},
@@ -98,12 +106,17 @@ export default {
       this.$router.push('/login');
     } else {
         if(!this.$state.session.user.roles.questionarios){
-        this.$state.$emit('logout');
-        this.$router.push('/login');
+          this.$state.$emit('logout');
+          this.$router.push('/login');
       }
     }
 
-    this.initialize();
+    this.$eventHub.$on("updatePacientes", () => {
+      this.getAllQuestionarios();
+    });
+  },
+  mounted() {
+    this.getAllQuestionarios();
   }
 };
 </script>

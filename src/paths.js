@@ -16,7 +16,9 @@ export default {
     create: `${baseUrl}/consultorio/questionarios/create.php`,
     delete: `${baseUrl}/consultorio/questionarios/delete.php`,
     getAll: `${baseUrl}/consultorio/questionarios/getAll.php`,
-    getById: `${baseUrl}/consultorio/questionarios/getById.php`,
+    getPerguntas: `${baseUrl}/consultorio/questionarios/getPerguntas.php`,
+    getResposta: `${baseUrl}/consultorio/questionarios/getResposta.php`,
+    editResposta: `${baseUrl}/consultorio/questionarios/editResposta.php`,
     update: `${baseUrl}/consultorio/questionarios/update.php`
   },
   consultas: {

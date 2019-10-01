@@ -2,38 +2,41 @@
   <div>
     <v-dialog v-model="dialog" persistent scrollable max-width="720px">
       <template v-slot:activator="{ on }">
-        <v-btn round color="success" v-on="on">
-          <v-icon left>add_circle</v-icon>
-          <span>Novo paciente</span>
-        </v-btn>
+        <v-icon small class="mr-3" v-on="on">visibility</v-icon>
       </template>
       <v-card>
         <v-card-title class="primary headline">
           <v-icon dark left>person</v-icon>
-          <span class="white--text">Novo paciente</span>
+          <span class="white--text">Dados do paciente</span>
+          <v-spacer></v-spacer>
+          <v-btn flat round dark @click="isEditing = !isEditing">
+            <v-icon left>edit</v-icon>
+            <span>Editar</span>
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-form>
             <v-container grid-list-md>
               <v-layout row wrap>
                 <v-flex xs8>
-                  <v-text-field v-model="paciente.nome" label="Nome completo" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.nome" label="Nome completo" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                  <v-text-field v-model="paciente.convenio" label="Convênio" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.convenio" label="Convênio" clearable required></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row wrap align-center>
                 <v-flex xs4>
-                  <v-text-field v-model="paciente.cpf" label="CPF" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.cpf" label="CPF" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                  <v-text-field v-model="paciente.rg" label="RG" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.rg" label="RG" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                  <v-menu v-model="datePickerMenu" offset-y :close-on-content-click="false">
+                  <v-menu :disabled="!isEditing" v-model="datePickerMenu" offset-y :close-on-content-click="false">
                     <template v-slot:activator="{ on }">
                       <v-text-field
+                        :disabled="!isEditing"
                         v-model="formattedDate"
                         v-on="on"
                         label="Data de nascimento"
@@ -41,6 +44,7 @@
                       ></v-text-field>
                     </template>
                     <v-date-picker
+                      :disabled="!isEditing"
                       color="primary"
                       v-model="paciente.dataNascimento"
                       @input="datePickerMenu = false"
@@ -51,10 +55,11 @@
               </v-layout>
               <v-layout row wrap align-center>
                 <v-flex xs4>
-                  <v-checkbox label="Possui responsável?" v-model="ageCheckbox" color="primary"></v-checkbox>
+                  <v-checkbox :disabled="!isEditing" label="Possui responsável?" v-model="ageCheckbox" color="primary"></v-checkbox>
                 </v-flex>
                 <v-flex xs8 v-if="ageCheckbox">
                   <v-text-field
+                    :disabled="!isEditing"
                     v-model="paciente.responsavel"
                     label="Nome do responsável"
                     clearable
@@ -70,21 +75,21 @@
               </v-layout>
               <v-layout row wrap>
                 <v-flex xs8>
-                  <v-text-field v-model="paciente.email" label="Email" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.email" label="Email" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                  <v-text-field v-model="paciente.telefone" label="Telefone" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.telefone" label="Telefone" clearable required></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row wrap>
                 <v-flex xs6>
-                  <v-text-field v-model="paciente.endereco" label="Endereço" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.endereco" label="Endereço" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                  <v-text-field v-model="paciente.cidade" label="Cidade" clearable required></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.cidade" label="Cidade" clearable required></v-text-field>
                 </v-flex>
                 <v-flex xs2>
-                  <v-select v-model="paciente.uf" :items="states" label="UF"></v-select>
+                  <v-select :disabled="!isEditing" v-model="paciente.uf" :items="states" label="UF"></v-select>
                 </v-flex>
               </v-layout>
               <v-layout row wrap mt-3>
@@ -95,19 +100,20 @@
               </v-layout>
               <v-layout row wrap>
                 <v-flex xs6>
-                  <v-text-field v-model="paciente.profissao" label="Profissão" clearable></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.profissao" label="Profissão" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs6>
-                  <v-text-field v-model="paciente.estadoCivil" label="Estado civil" clearable></v-text-field>
+                  <v-text-field :disabled="!isEditing" v-model="paciente.estadoCivil" label="Estado civil" clearable></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
+          <ViewQuestionarios :pacienteData="originalPaciente" />
           <v-spacer></v-spacer>
-          <v-btn flat @click="dismiss">Cancelar</v-btn>
-          <v-btn color="success" @click="createPaciente">Cadastrar</v-btn>
+          <v-btn flat @click="restoreData">Voltar</v-btn>
+          <v-btn color="success" :disabled="!isEditing" @click="createPaciente">Salvar</v-btn>
         </v-card-actions>
       </v-card>
       <v-snackbar v-model="snackbar" :timeout="4500" color="warning" top>
@@ -124,10 +130,15 @@
 <script>
 import axios from "axios";
 import paths from "@/paths";
+import ViewQuestionarios from '@/components/ViewQuestionarios';
 
 export default {
+  components: { ViewQuestionarios },
+  props: ["pacienteData"],
   data() {
     return {
+      isEditing: false,
+      originalPaciente: this.pacienteData,
       paciente: {
         nome: null,
         convenio: null,
@@ -181,46 +192,11 @@ export default {
   },
   methods: {
     dismiss() {
-      this.paciente.nome = null;
-      this.paciente.convenio = null;
-      this.paciente.cpf = null;
-      this.paciente.rg = null;
-      this.paciente.dataNascimento = new Date().toISOString().substr(0, 10);
-      this.paciente.responsavel = "";
-      this.paciente.email = null;
-      this.paciente.telefone = null;
-      this.paciente.endereco = null;
-      this.paciente.cidade = null;
-      this.paciente.uf = null;
-      this.paciente.profissao = "";
-      this.paciente.estadoCivil = "";
       this.dialog = false;
+      this.$eventHub.$emit('updatePacientes');
     },
     createPaciente() {
-      Promise.all([
-        new Promise((resolve, reject) => {
-          let data = this.paciente;
-          if (this.verifyFields(data)) {
-            axios
-              .post(paths.pacientes.create, JSON.stringify(data))
-              .then(response => {
-                resolve();
-              })
-              .catch(error => {
-                reject("Falha ao cadastrar paciente!");
-              });
-          } else {
-            reject("Preencha todos os campos obrigatórios!");
-          }
-        })
-      ])
-      .then((response) => {
-        this.$eventHub.$emit('updatePacientes');
-        this.dismiss();
-      })
-      .catch((error) => {
-        this.notify(error);
-      });
+      console.log(this.paciente);
     },
     verifyFields(data) {
       return (data.nome && data.convenio && data.cpf && data.rg && data.dataNascimento
@@ -229,6 +205,23 @@ export default {
     notify(message) {
       this.message = message;
       this.snackbar = true;
+    },
+    restoreData() {
+      this.paciente.nome = this.originalPaciente.nome;
+      this.paciente.convenio = this.originalPaciente.convenio;
+      this.paciente.cpf = this.originalPaciente.cpf;
+      this.paciente.rg = this.originalPaciente.rg;
+      this.paciente.dataNascimento = this.originalPaciente.datanascimento;
+      this.paciente.responsavel = this.originalPaciente.responsavel;
+      this.paciente.email = this.originalPaciente.email;
+      this.paciente.telefone = this.originalPaciente.telefone;
+      this.paciente.endereco = this.originalPaciente.endereco;
+      this.paciente.cidade = this.originalPaciente.cidade;
+      this.paciente.uf = this.originalPaciente.uf;
+      this.paciente.profissao = this.originalPaciente.profissao;
+      this.paciente.estadoCivil = this.originalPaciente.estadoCivil;
+      this.isEditing = false;
+      this.dialog = false;
     }
   },
   computed: {
@@ -236,6 +229,9 @@ export default {
       let split = this.paciente.dataNascimento.split("-");
       return `${split[2]}/${split[1]}/${split[0]}`;
     }
+  },
+  created() {
+    this.restoreData();
   }
 };
 </script>

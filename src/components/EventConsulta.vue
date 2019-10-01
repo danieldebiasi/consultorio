@@ -237,13 +237,6 @@ export default {
       }
     },
     reschedule() {
-      console.log(JSON.stringify({ 
-                id: this.event.id,
-                dia: this.date,
-                inicio: this.startTime,
-                termino: this.endTime,
-                descricao: this.description
-              }));
       Promise.all([
         new Promise((resolve, reject) => {
           axios
@@ -258,7 +251,6 @@ export default {
               })
             )
             .then(response => {
-              console.log("Response: ", response);
               if (response.data.status == 200) {
                 resolve();
               } else {

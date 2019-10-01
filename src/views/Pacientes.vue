@@ -16,10 +16,10 @@
         <template v-slot:items="props">
           <td>{{ props.item.nome }}</td>
           <td>{{ props.item.convenio }}</td>
-          <td class="justify-end layout px-0">
+          <td class="justify-end align-center layout px-0">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-3" v-on="on" @click="viewPacient()">visibility</v-icon>
+                <ViewPaciente v-on="on" :pacienteData="props.item" />
               </template>
               <span>Visualizar paciente</span>
             </v-tooltip>
@@ -46,9 +46,10 @@
 import axios from "axios";
 import paths from "@/paths";
 import FormPaciente from "@/components/FormPaciente";
+import ViewPaciente from "@/components/ViewPaciente";
 
 export default {
-  components: { FormPaciente },
+  components: { FormPaciente, ViewPaciente },
   data() {
     return {
       headers: [
@@ -96,17 +97,21 @@ export default {
     },
     viewPacient() {},
     getAllPacientes() {
-      axios
-        .get(paths.pacientes.getAll)
-        .then(response => {
-          this.items = [];
-          response.data.forEach(element => {
-            this.items.push(element);
-          });
+      Promise.all([
+        new Promise((resolve, reject) => {
+          axios
+            .get(paths.pacientes.getAll)
+            .then(response => {
+              this.items = [];
+              response.data.forEach(element => {
+                this.items.push(element);
+              });
+            })
+            .catch(error => {
+              console.log(error);
+            });
         })
-        .catch(error => {
-          console.log(error);
-        });
+      ]);
     }
   },
   created() {
