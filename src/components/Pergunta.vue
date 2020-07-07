@@ -7,6 +7,7 @@
           label="Digite a pergunta" 
           v-model="question" 
           @input="updateQuestion"
+          :disabled="isDisabled"
         ></v-text-field>
       </v-flex>
       <v-flex xs1>
@@ -19,6 +20,7 @@
               color="error"
               v-on="on"
               @click="deleteQuestion()"
+              :disabled="isDisabled"
             >delete</v-icon>
           </template>
           <span>Excluir pergunta</span>
@@ -30,7 +32,7 @@
 
 <script>
 export default {
-  props: ["item"],
+  props: ["item", "isEditing"],
   data() {
     return {
       question: this.item.question,
@@ -43,6 +45,11 @@ export default {
     },
     deleteQuestion() {
       this.$emit("deleteQuestion", this.index);
+    }
+  },
+  computed: {
+    isDisabled() {
+      return this.isEditing;
     }
   }
 };

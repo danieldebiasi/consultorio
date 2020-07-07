@@ -2,20 +2,22 @@
   <div>
     <v-dialog v-model="dialog" persistent scrollable max-width="720px">
       <template v-slot:activator="{ on }">
-        <v-btn round color="success" v-on="on">
-          <v-icon left>add_circle</v-icon>
-          <span>Novo usuário</span>
-        </v-btn>
+        <v-icon small class="mr-3" v-on="on">visibility</v-icon>
       </template>
       <v-card>
         <v-card-title class="primary headline">
           <v-icon dark left>perm_identity</v-icon>
-          <span class="white--text">Novo usuário</span>
+          <span class="white--text">Visualizar usuário</span>
+          <v-spacer></v-spacer>
+          <v-btn flat round dark @click="isEditing = !isEditing">
+            <v-icon left>edit</v-icon>
+            <span>Editar</span>
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-layout row wrap>
             <v-flex xs12>
-              <v-text-field label="Nome" v-model="usuario.name"></v-text-field>
+              <v-text-field :disabled="!isEditing" label="Nome" v-model="usuario.name"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap my-3>
@@ -26,7 +28,7 @@
           </v-layout>
           <v-layout row wrap>
             <v-flex xs6 pr-2>
-              <v-text-field label="Usuário" v-model="usuario.username"></v-text-field>
+              <v-text-field :disabled="!isEditing" label="Usuário" v-model="usuario.username"></v-text-field>
             </v-flex>
             <v-flex xs6 pl-2>
               <v-text-field
@@ -35,21 +37,23 @@
                 :append-icon="showPassword ? 'visibility' : 'visibility_off'"
                 @click:append="showPassword = !showPassword"
                 :type="showPassword ? 'text' : 'password'"
+                :disabled="!isEditing"
               ></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap align-center>
             <v-flex xs6 pr-2>
-              <v-select :items="types" v-model="usuario.userType" label="Tipo de usuário"></v-select>
+              <v-select :disabled="!isEditing" :items="types" v-model="usuario.userType" label="Tipo de usuário"></v-select>
             </v-flex>
             <v-flex xs5 pl-2 v-if="usuario.userType != 'Administrador'">
               <v-checkbox
                 label="Permitir editar/deletar?"
                 v-model="usuario.isAdmin"
-                color="primary"
+                color="primary" 
+                :disabled="!isEditing"
               ></v-checkbox>
             </v-flex>
-            <v-flex xs1 class="text-xs-left" v-if="usuario.userType != 'Administrador'">
+            <v-flex xs1 :disabled="!isEditing" class="text-xs-left" v-if="usuario.userType != 'Administrador'">
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-icon color="warning" v-on="on">help</v-icon>
@@ -66,10 +70,10 @@
           </v-layout>
           <v-layout row wrap>
             <v-flex xs6>
-              <v-checkbox label="Consulta" v-model="usuario.allowConsulta" color="primary"></v-checkbox>
+              <v-checkbox :disabled="!isEditing" label="Consulta" v-model="usuario.allowConsulta" color="primary"></v-checkbox>
             </v-flex>
             <v-flex xs6>
-              <v-checkbox label="Pacientes" v-model="usuario.allowPacientes" color="primary"></v-checkbox>
+              <v-checkbox :disabled="!isEditing" label="Pacientes" v-model="usuario.allowPacientes" color="primary"></v-checkbox>
             </v-flex>
           </v-layout>
           <v-layout row wrap>
@@ -77,7 +81,8 @@
               <v-checkbox
                 label="Questionários"
                 v-model="usuario.allowQuestionarios"
-                color="primary"
+                color="primary" 
+                :disabled="!isEditing"
               ></v-checkbox>
             </v-flex>
             <v-flex xs6>
@@ -85,14 +90,15 @@
                 label="Configurações"
                 v-model="usuario.allowConfiguracoes"
                 color="primary"
+                :disabled="!isEditing"
               ></v-checkbox>
             </v-flex>
           </v-layout>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat @click="dismiss">Cancelar</v-btn>
-          <v-btn color="success" @click="createUsuario">Cadastrar</v-btn>
+          <v-btn flat @click="dismiss">Voltar</v-btn>
+          <v-btn color="success" :disabled="!isEditing" @click="createUsuario">Salvar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -115,6 +121,7 @@ export default {
   data() {
     return {
       dialog: false,
+      isEditing: false,
       usuario: {
         name: "",
         username: "",

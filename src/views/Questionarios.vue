@@ -21,15 +21,10 @@
         <template v-slot:items="props">
           <td>{{ props.item.title }}</td>
           <td>{{ props.item.category }}</td>
-          <td class="justify-end layout px-0">
+          <td class="justify-end align-center layout px-0">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">              
-                <v-icon 
-                  small  
-                  class="mr-3" 
-                  v-on="on"
-                  @click="viewForm()"
-                >visibility</v-icon>
+                <ViewQuestionario :data="props.item" />
               </template>
               <span>Visualizar questionário</span>
             </v-tooltip>
@@ -54,11 +49,12 @@
 
 <script>
 import FormQuestionario from '@/components/FormQuestionario';
+import ViewQuestionario from '@/components/ViewQuestionario';
 import axios from 'axios';
 import paths from '@/paths';
 
 export default {
-  components: { FormQuestionario },
+  components: { FormQuestionario, ViewQuestionario },
   data() {
     return {
       headers: [

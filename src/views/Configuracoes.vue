@@ -22,15 +22,10 @@
           <td>{{ props.item.nome }}</td>
           <td>{{ props.item.tipo }}</td>
           <td>{{ props.item.username }}</td>
-          <td class="justify-end layout px-0">
+          <td class="justify-end align-center layout px-0">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">              
-                <v-icon 
-                  small  
-                  class="mr-3" 
-                  v-on="on"
-                  @click="viewUser()"
-                >visibility</v-icon>
+                <ViewUsuario />
               </template>
               <span>Visualizar usuário</span>
             </v-tooltip>
@@ -55,11 +50,12 @@
 
 <script>
 import FormUsuario from '@/components/FormUsuario';
+import ViewUsuario from '@/components/ViewUsuario';
 import axios from 'axios';
 import paths from '@/paths';
 
 export default {
-  components: { FormUsuario },
+  components: { FormUsuario, ViewUsuario },
   data() {
     return {
       headers: [

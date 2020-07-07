@@ -67,7 +67,7 @@
                       prepend-icon="assignment_turned_in"
                     ></v-text-field>
                   </v-flex>
-                  <v-flex xs12>
+                  <v-flex xs12 v-if="answers">
                     <v-textarea
                       class="ma-2"
                       name="resposta"
@@ -99,8 +99,9 @@ export default {
       dialog: false,
       questionarios: [],
       questionario: null,
-      questions: [],
-      answers: []
+      questions: null,
+      questionsGet: [],
+      answers: null
     };
   },
   methods: {
@@ -110,7 +111,7 @@ export default {
     select(item) {
       this.questionario = item;
       this.answers = [];
-      this.questions = [];
+      this.questions = null;
       this.getQuestions(item.id);
     },
     dismiss() {
@@ -171,7 +172,7 @@ export default {
               idQuestionario: idQuestionario
             }))
             .then(response => {
-              this.questions = response.data;
+              this.questionsGet = response.data;
               response.data.forEach(element => {
                 this.getAnswer(element.id);
               });
@@ -185,6 +186,7 @@ export default {
         .then(response => {
           console.log("QUESTIONS");
           console.log(this.questions);
+          this.questions = this.questionsGet;
         })
         .catch(error => {
           console.log(error);
@@ -202,7 +204,7 @@ export default {
               })
             )
             .then(response => {
-              this.questions.forEach(el => {
+              this.questionsGet.forEach(el => {
                 if(el.id == idPergunta) {
                   el.answer = response.data.resposta ? response.data.resposta.resposta : "";
                 }
@@ -221,16 +223,7 @@ export default {
     }
   },
   computed: {
-    answer() {
-      return answers;
-    },
-    questionariosItems() {
-      let items = [];
-      this.questionarios.forEach(element => {
-        items.push(element.title);
-      });
-      return items;
-    }
+    
   },
   mounted() {
     this.getAllQuestionarios();
